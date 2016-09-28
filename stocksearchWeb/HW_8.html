@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="ttp://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap-carousel.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
+    <title>Stock Search</title>
+ </head>
+
+    <style>
+      body{
+        background-color: #1E5677;
+        padding: 10px;
+        font-size: 12.5px;
+      }
+      .cent{
+        text-align: center;
+      }
+      .hpaddt{
+        padding-top: 5px;
+      }
+      .marg{
+        margin-bottom: 10px;
+      }
+      .boldd{
+        font-weight: bold;
+      }
+      .colorr{
+        background-color: #FFFFFF;
+      }
+      .newc{
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        padding: 10px;
+        padding-bottom: 5px
+      }
+      .hpaddl{
+        padding-left: 5px;
+      }
+      .hpaddll{
+        padding-left: 10px;
+      }
+      .form-group{
+        padding: 8px
+      }
+     .nnrow{
+      width: 100%;
+      margin-bottom: 10px;
+     }
+     .padd{
+      padding: 0px;
+     }
+     .paddrr{
+      padding-right: 0px;
+     }
+     .paddt{
+      padding-top: 0px;
+     }
+     .paddr{
+      padding: 0px;
+      margin: 0px;
+      padding-right: 5px;
+     }
+     .paddb{
+     padding-bottom: 0px;
+    }
+    .roundedd{
+      border-radius: 2px;
+    }
+     .middlee{
+      text-align: center;
+     }
+     .rr{
+      color: red;
+     }
+     .gg{
+      color: green;
+     }
+    </style>
+    
+    
+ 
+  <body>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1540241879603939',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+    <div class="container">
+      <div class="newc">
+        <div class="text-center">
+          <h5>Stock Market Search</h5>
+        </div>
+        <FORM role="form" class="form-inline" method="GET" id="formsubmit">
+          <!-- <div class="form-group"> -->
+            <div class="row nnrow">
+              <div class="col-md-4 marg">
+                <LABEL FOR="stock">Enter the stock name or symbol:<span style="color:red">*</span></LABEL>
+              </div>
+              <div class="col-md-5 marg">
+                <INPUT TYPE="TEXT" SIZE="60" class="form-control" NAME="stock" ID="stock" placeholder="Apple Inc or AAPL"  REQUIRED />
+              </div>
+              <div class="col-md-3 marg">
+                <button TYPE="SUBMIT" id="getquote" class="btn btn-primary" > <span class="glyphicon glyphicon-search"></span>Get Quote</button>
+                <button TYPE="BUTTON" class="btn btn-default" onClick="clearfield()"><span class="glyphicon glyphicon-refresh"></span>Clear</button>
+              </div>
+            </div>
+          <!-- </div> -->
+        </FORM>
+        <div class="form-group">
+          <div class="row nnrow">
+            <div class="col-md-4"></div>
+            <div class="col-md-5" id="validity"></div>
+            <div class="col-md-3">
+              <LABEL FOR="MODLink">Powered by:</LABEL>
+              <a href="http://dev.markitondemand.com/MODApis/" target="_blank">
+                <img src="http://cs-server.usc.edu:45678/hw/hw8/images/mod-logo.png" alt="mod-logo" width="100px" height="25px"/>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="newcc">
+        <div id="myCarousel" class="carousel slide" data-interval="false" >
+          <div class="carousel-inner">
+            <div class="item active">
+              <div class="well colorr">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <div class="row hpaddl">
+                      <div class="col-md-8 col-lg-9 col-sm-5 col-xs-4 padd">
+                        <h6>
+                          Favorite List
+                       </h6>
+                      </div>
+                      <div class="col-md-4 col-lg-3 col-sm-7 col-xs-8 text-right padd hpaddt">
+                        <span class=" hidden-xs">
+                        Automatic Refresh:
+                        </span>
+                        <span title="Automatic Refresh" data-toggle="tooltip">
+                          <input type="checkbox" class="paddt" id="tog" data-toggle="toggle">
+                        </span>
+                        <span title="Refresh" data-toggle="tooltip">
+                          <button TYPE="BUTTON" class="btn btn-default" id="refre"><span class="glyphicon glyphicon-refresh"></span></button>
+                        </span>
+                          <a data-target="#myCarousel" data-slide-to="1" href="#" id="next" role="button"  title="Go to Stock Information" data-toggle="tooltip"class="btn btn-default" disabled="disabled"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                          </a>  
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="col-md-12 table-responsive">
+                        <table class="table table-striped" id="favtable">
+                          <tr>
+                            <th>Symbol</th>
+                            <th>Company Name</th>
+                            <th>Stock Price</th>
+                            <th>Change (Change Percent)</th>
+                            <th>Market Cap</th>
+                            <th></th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="well colorr">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
+                        <a data-target="#myCarousel" data-slide-to="0" href="#" id="car2">
+                          <button TYPE="BUTTON" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                        </a>
+                      </div>
+                      <div class="boldd col-md-10 col-lg-10 col-sm-10 col-xs-10 cent hpaddt " align="center">    
+                        Stock Details
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="row">
+                      <ul class="nav nav-pills" >
+                        <li class="active padd">
+                          <a data-toggle="tab" href="#tab1" class="active"><span class="glyphicon glyphicon-dashboard"></span> <span class="hidden-xs">Current </span> Stock</a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" href="#tab2"  onclick="histt();" ><span class="glyphicon glyphicon-stats"></span> <span class="hidden-xs">Historical</span> Charts</a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" href="#tab3"><span class="glyphicon glyphicon-link"></span> News <span class="hidden-xs">Feed</span></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <hr/>
+                    <div class="tab-content hpaddll">
+                      <div role="tabpanel" class="tab-pane fade in active" id="tab1"> 
+                        <div class="row boldd">
+                          <div class="col-md-8 col-lg-9 col-sm-9 col-xs-6 padd">  
+                            Stock Details
+                          </div>
+                          <div class="col-md-4 col-lg-3 col-sm-3 col-xs-6 paddr pull-right text-right">
+                            <img src="fb_button.png" id="fb" height="35px" width="35px"/>
+                            <button class="btn btn-default" id="fav" style="color:'black';"><i class="material-icons" id="stari">star</i></button>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <table class="table table-striped" id="resultdata">      
+                            </table>
+                          </div>
+                          <div class="col-md-6" id="chart">
+                          </div>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="tab2"> 
+                        <div id="cchart">
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="tab3"> 
+                        <div class="row">
+                          <div class="col-md-12" id="newss">
+                          </div>
+                        </div>
+                      </div>
+                      <div id="dummy" style="display:none;color:'black';"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+$(window).load(function() {
+  favtt();
+});
+
+      function histt()
+    {
+      $.ajax
+            ({
+              url:"http://stocksearch-1280.appspot.com/index.php/?symbols="+$("#stock").val()+"&callback=?",
+              dataType: "jsonp",
+              type:"GET",
+              success: function(response,status,xhr)
+              {
+                var cha = JSON.parse(response);      
+                var datee = cha['Dates'];                        
+                var o =  cha.Elements[0].DataSeries.open.values;
+                var h =  cha.Elements[0].DataSeries.high.values;
+                var l =  cha.Elements[0].DataSeries.low.values;
+                var c =  cha.Elements[0].DataSeries.close.values;
+                var data1=new Array();
+                for(i=0;i<datee.length;i++)
+                {
+                  var ndatee = new Date(datee[i]);                          
+                  var ttime = ndatee.getTime();
+                  var temp = new Array();
+                  temp[0] = ttime;
+                  temp[1] = o[i];
+                  temp[2] = h[i];
+                  temp[3] = l[i];
+                  temp[4] = c[i];
+                  data1[i]=temp;                       
+                }
+
+                $('#cchart').highcharts('StockChart', {
+
+                    title: {
+                        text: $("#stock").val().toUpperCase()+" Stock Value"
+                    },
+                    rangeSelector: {
+
+                        buttons: [ {
+                            type: 'week',
+                            count: 1,
+                            text: '1w'
+                        }, {
+                            type: 'month',
+                            count: 1,
+                            text: '1m'
+                        },{
+                            type: 'month',
+                            count: 3,
+                            text: '3m'
+                        }, {
+                            type: 'month',
+                            count: 6,
+                            text: '6m'
+                        }, {
+                            type: 'ytd',
+                            count: 1,
+                            text: 'YTD'
+                        },{
+                            type: 'year',
+                            count: 1,
+                            text: '1y'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        selected: 0,
+                        inputEnabled : false
+                    },
+                     yAxis: {
+                        title: {
+                            text: 'Stock Value'
+                        }
+                    },
+                    exporting: {
+                    enabled: false
+                    },
+                    xAxis: {
+                        dateTimeLabelFormats: 
+                        {
+                        hour: '%e. %b<br><span style="font-size: 8px">%H:%M</span>'
+                        }
+                    },
+
+                    series : [{
+                        name : $("#stock").val().toUpperCase(),
+                        type: 'area',
+                        data : data1,
+                        gapSize: 5,
+                        tooltip: {
+                            valueDecimals: 2
+                        },
+                        fillColor : {
+                            linearGradient : {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops : [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        threshold: null
+                    }]
+                });
+
+              }
+            });
+    }
+
+    var graphh, sname, symb, sval, schange, schangepercent,mcap,temp;
+    var arr = new Array();
+    var valarr=new Array();
+    var no=1;
+    var x=0;
+    function clearfield()
+    {
+      document.getElementById("stock").value= "";
+      document.getElementById("next").disabled= "true";
+      document.getElementById("cchart").innerHTML= "";
+      document.getElementById("resultdata").innerHTML= "";
+      document.getElementById("chart").innerHTML= "";
+      $("#validity").empty();
+      $("#myCarousel").carousel(0);
+    }
+    
+    function remm(attrName)
+    {
+      $("#"+attrName).remove();
+      localStorage.removeItem(attrName);
+      if(attrName==symb)
+        $('#fav').css("color",$('#dummy').css("color"));
+    }
+
+    function favtt()
+    {
+      for (var i = 0; i < localStorage.length; i++) 
+      {
+        arr.push(localStorage.getItem(localStorage.key(i)));
+      }
+      if(arr.length>0)
+      {
+          arr.sort(function(a, b){
+              return (parseInt(a) - parseInt(b));
+          });
+          for (var i = 0; i < arr.length; i++) 
+          {
+            arr[i]=arr[i].replace(/[0-9]/g,'');
+          }
+          favtemp(arr[0]);
+      }
+    }
+
+    function favtemp(id)
+    {
+      $.ajax
+      ({
+          url:"http://stocksearch-1280.appspot.com/index.php/?symbol="+id+"&callback=?",
+          dataType: "jsonp",
+          type:"GET",
+          success: function(result1,status,xhr)
+          {
+            var result = JSON.parse(result1);     
+            var mmap;
+            if(result.MarketCap<1000000)
+              mmcap=result.MarketCap;
+            else if(result.MarketCap<1000000000)
+              mmcap=(result.MarketCap/1000000).toFixed(2)+" Million";
+            else
+              mmcap=(result.MarketCap/1000000000).toFixed(2)+" Billion";
+            if(result.Change<0)
+              $('#favtable').append("<tr id='"+result.Symbol+"'><td><a role='button' name='"+result.Symbol+"' onClick='favlink(this.name)'>"+result.Symbol+"</a></td><td>"+result.Name+"</td><td>$ "+result.LastPrice+"</td><td><span class='rr'>"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' /></td><td>"+mmcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+result.Symbol+"' onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+            else if(result.Change>0)
+              $('#favtable').append("<tr id='"+result.Symbol+"'><td><a role='button' name='"+result.Symbol+"' onClick='favlink(this.name)'>"+result.Symbol+"</a></td><td>"+result.Name+"</td><td>$ "+result.LastPrice+"</td><td><span class='gg'>"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td><td>"+mmcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+result.Symbol+"'  onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+            else
+              $('#favtable').append("<tr id='"+result.Symbol+"'><td><a role='button' name='"+result.Symbol+"' onClick='favlink(this.name)'>"+result.Symbol+"</a></td><td>"+result.Name+"</td><td>$ "+result.LastPrice+"</td><td><span >"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span></td><td>"+mmcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+result.Symbol+"'  onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+              if(x<arr.length-1)
+              {
+                x++;
+                favtemp(arr[x]);
+              }
+            },
+        });
+      }
+
+      function favlink(linkker)
+      {
+        linkk=linkker.toUpperCase();
+        $.ajax
+            ({
+              url:"http://stocksearch-1280.appspot.com/index.php/?symbol="+linkk+"&callback=?",
+              dataType: "jsonp",
+              type:"GET",
+              success: function(result1,status,xhr){
+                var result = JSON.parse(result1);     
+                if(result.Message || result.Status!="SUCCESS")
+                  {
+                    $("#validity").empty();
+                    $("#validity").append("<p style='color:red'>Select a valid entry</p>");
+                    $("#next").prop("disabled",true);
+                    $("#myCarousel").carousel(0);
+                  }
+                  else
+                  {
+                    if(localStorage.getItem(result.Symbol)==null)
+                      $('#fav').css("color",$('#dummy').css("color"));
+                    else
+                      $('#fav').css("color","yellow");
+                    
+                    graphh="http://chart.finance.yahoo.com/t?s="+result.Symbol+"&lang=en-US&width=180&height=200";
+                    sname=result.Name;
+                    symb=result.Symbol;
+                    sval=result.LastPrice;
+                    schange=(result.Change).toFixed(2);
+                    schangepercent=(result.ChangePercent).toFixed(2);
+                    if(result.MarketCap<1000000)
+                      mcap=result.MarketCap;
+                    else if(result.MarketCap<1000000000)
+                      mcap=(result.MarketCap/1000000).toFixed(2)+" Million";
+                    else
+                      mcap=(result.MarketCap/1000000000).toFixed(2)+" Billion";
+                    $("#validity").empty();
+                    $("#resultdata").empty();
+                    $("#chart").empty();
+                    $("#next").prop("disabled",false);
+                    $("#myCarousel").carousel(1);
+                    $("#resultdata").append("<tr><td class='boldd'>Name</td><td>"+result.Name+"</td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>Symbol</td><td>"+result.Symbol+"</td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>Last Price</td><td>$ "+result.LastPrice+"</td></tr>");
+                    $("#resultdata").append();
+                    if(result.Change<0)
+                      $("#resultdata").append("<tr><td class='boldd'>Change (Change Percent)</td><td>"+Math.abs((result.Change).toFixed(2))+" ( "+Math.abs((result.ChangePercent).toFixed(2))+"<img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' />% )</td></tr>");
+                    else if(result.Change>0)
+                      $("#resultdata").append("<tr><td class='boldd'>Change (Change Percent)</td><td>"+Math.abs((result.Change).toFixed(2))+" ( "+Math.abs((result.ChangePercent).toFixed(2))+"% )<img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td></tr>");
+                    $("#resultdata").append();
+                    $("#resultdata").append("<tr><td class='boldd'>Time and Date</td><td>"+moment(result.Timestamp).format('DD MMMM YYYY, h:mm:ss a')+"</td></tr>");
+                    if(result.MarketCap<1000000)
+                      $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+result.MarketCap+"</td></tr>");
+                    else if(result.MarketCap<1000000000)
+                      $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+(result.MarketCap/1000000).toFixed(2)+" Million</td></tr>");
+                    else
+                      $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+(result.MarketCap/1000000000).toFixed(2)+" Billion</td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>Volume</td><td>"+result.Volume+"</td></tr>");
+                    if(result.Change<0)
+                      $("#resultdata").append("<tr><td class='boldd'>Change YTD (Change Percent YTD)</td><td>"+Math.abs((result.ChangeYTD).toFixed(2))+" ( "+Math.abs((result.ChangePercentYTD).toFixed(2))+"<img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' />% )</td></tr>");
+                    else if(result.Change>0)
+                      $("#resultdata").append("<tr><td class='boldd'>Change YTD (Change Percent YTD)</td><td>"+Math.abs((result.ChangeYTD).toFixed(2))+" ( "+Math.abs((result.ChangePercentYTD).toFixed(2))+"% )<img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>High Price</td><td>$ "+(result.High).toFixed(2)+"</td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>Low Price</td><td>$ "+(result.Low).toFixed(2)+"</td></tr>");
+                    $("#resultdata").append("<tr><td class='boldd'>Opening Price</td><td>$ "+(result.Open).toFixed(2)+"</td></tr>");
+                    $("#chart").append("<img src='http://chart.finance.yahoo.com/t?s="+result.Symbol+"&lang=en-US&width=520&height=400'/>")
+                  }
+              },
+            });
+            $.ajax
+            ({
+              url:"http://stocksearch-1280.appspot.com/index.php/?symbols="+linkk+"&callback=?",
+              dataType: "jsonp",
+              type:"GET",
+              success: function(response,status,xhr)
+              {
+                var cha = JSON.parse(response);      
+                var datee = cha['Dates'];                        
+                var o =  cha.Elements[0].DataSeries.open.values;
+                var h =  cha.Elements[0].DataSeries.high.values;
+                var l =  cha.Elements[0].DataSeries.low.values;
+                var c =  cha.Elements[0].DataSeries.close.values;
+                var data1=new Array();
+                for(i=0;i<datee.length;i++)
+                {
+                  var ndatee = new Date(datee[i]);                          
+                  var ttime = ndatee.getTime();
+                  var temp = new Array();
+                  temp[0] = ttime;
+                  temp[1] = o[i];
+                  temp[2] = h[i];
+                  temp[3] = l[i];
+                  temp[4] = c[i];
+                  data1[i]=temp;                       
+                }
+
+                $('#cchart').highcharts('StockChart', {
+
+                    title: {
+                        text: linkk+" Stock Value"
+                    },
+                    rangeSelector: {
+
+                        buttons: [ {
+                            type: 'week',
+                            count: 1,
+                            text: '1w'
+                        }, {
+                            type: 'month',
+                            count: 1,
+                            text: '1m'
+                        },{
+                            type: 'month',
+                            count: 3,
+                            text: '3m'
+                        }, {
+                            type: 'month',
+                            count: 6,
+                            text: '6m'
+                        }, {
+                            type: 'ytd',
+                            count: 1,
+                            text: 'YTD'
+                        },{
+                            type: 'year',
+                            count: 1,
+                            text: '1y'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        selected: 0,
+                        inputEnabled : false
+                    },
+                     yAxis: {
+                        title: {
+                            text: 'Stock Value'
+                        }
+                    },
+                    exporting: {
+                    enabled: false
+                    },
+                    xAxis: {
+                        dateTimeLabelFormats: 
+                        {
+                        hour: '%e. %b<br><span style="font-size: 8px">%H:%M</span>'
+                        }
+                    },
+
+                    series : [{
+                        name : linkk,
+                        type: 'area',
+                        data : data1,
+                        gapSize: 5,
+                        tooltip: {
+                            valueDecimals: 2
+                        },
+                        fillColor : {
+                            linearGradient : {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops : [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        threshold: null
+                    }]
+                });
+
+              }
+            });
+            // $.ajax
+            // ({
+            //   url:"http://stocksearch-1280.appspot.com/index.php/?symbolss="+$("#stock").val()+"&callback=?",
+            //   dataType: "jsonp",
+            //   type:"GET",
+            //   success: function(result1,status,xhr){
+            //     var resultt = JSON.parse(result1);     
+            //     var res = resultt.responseData['results']; 
+            //     $("#newss").empty();
+            //     for(i=0;i<res.length;i++)
+            //     {
+            //       $("#newss").append("<div class='well'><div class='row'><div class='col-md-12'><a href='"+res[i].unescapedUrl+"' target='_blank'>"+res[i].titleNoFormatting+"</a></div></div><div class='row'><div class='col-md-12'>"+res[i].content+"</div></div><div class='row'><div class='col-md-12'></div></div></br><div class='row'><div class='col-md-12'><span class='boldd'>Publisher: </span>"+res[i].publisher+"</div></div><div class='row'><div class='col-md-12'><span class='boldd'>Date: </span>"+res[i].publishedDate+"</div></div></div>");
+            //     }  
+            //   },
+            // });
+
+            $.ajax
+            ({
+              url:"http://stocksearch-1280.appspot.com/index.php/?symbolsss="+linkk+"&callback=?",
+              dataType: "jsonp",
+              type:"GET",
+              success: function(result1,status,xhr){
+                var resultt = JSON.parse(result1);     
+                var res = resultt.d['results']; 
+                $("#newss").empty();
+                for(i=0;i<res.length;i++)
+                {
+                  $("#newss").append("<div class='well'><div class='row'><div class='col-md-12'><a href='"+res[i].Url+"' target='_blank'>"+res[i].Title+"</a></div></div><div class='row'><div class='col-md-12'>"+res[i].Description+"</div></div><div class='row'><div class='col-md-12'></div></div></br><div class='row'><div class='col-md-12'><span class='boldd'>Publisher: </span>"+res[i].Source+"</div></div><div class='row'><div class='col-md-12'><span class='boldd'>Date: </span>"+res[i].Date+"</div></div></div>");
+                }  
+              },
+            });
+
+      }
+
+    function favt()
+    {
+      for (var i = 0; i < localStorage.length; i++)
+      {
+        $.ajax
+        ({
+            url:"http://stocksearch-1280.appspot.com/index.php/?symbol="+localStorage.key(i)+"&callback=?",
+            dataType: "jsonp",
+            type:"GET",
+            success: function(result1,status,xhr)
+            {
+              var result = JSON.parse(result1);     
+              var mmap;
+              if(result.MarketCap<1000000)
+                mmcap=result.MarketCap;
+              else if(result.MarketCap<1000000000)
+                mmcap=(result.MarketCap/1000000).toFixed(2)+" Million";
+              else
+                mmcap=(result.MarketCap/1000000000).toFixed(2)+" Billion";
+              $("#"+result.Symbol).children('td:nth-child(3)').html("$ "+result.LastPrice);
+              if(result.Change<0)
+                $("#"+result.Symbol).children('td:nth-child(4)').html("<span class='rr'>"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' />");
+              else if(result.Change>0)
+                $("#"+result.Symbol).children('td:nth-child(4)').html("<span class='gg'>"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' />");
+              else
+                $("#"+result.Symbol).children('td:nth-child(4)').html("<span>"+Math.abs(result.Change).toFixed(2)+" ( "+Math.abs(result.ChangePercent).toFixed(2)+"%)</span>");
+              $("#"+result.Symbol).children('td:nth-child(5)').html(mmcap);
+              },
+          });
+      }
+    }
+    $(function() 
+    {
+      $('#fb').click(function(e)
+      {
+        e.preventDefault();
+        FB.ui(
+        {
+          method: 'feed',
+          name: 'Current stock price of '+ sname + ' is $' + sval, 
+          link: 'http://dev.markitondemand.com/MODApis/',
+          picture: graphh,
+          caption: 'LAST TRADE PRICE: $' + sval + ' CHANGE: ' + schange + '(' + schangepercent + '%)',
+          description: 'Stock information of ' + sname + ' (' + symb +')',
+          message: ''
+        }, 
+        function(facebookResponse)
+        {
+          if (facebookResponse && facebookResponse.post_id) 
+          {
+            alert('Posted Successfully');
+          } 
+          else 
+          {
+          alert('Not Posted');
+          }
+        });
+      });
+
+      
+
+      $('#refre').click(function(e)
+      {
+        e.preventDefault();
+        favt();
+      });
+      
+      $('#tog').change(function() 
+      {
+        if($(this).prop('checked'))
+        {
+          temp=setInterval(favt, 5000);
+        }
+        else
+        {
+          clearInterval(temp);
+        }
+      });
+
+      $('#fav').click(function(e)
+      {
+        e.preventDefault();
+        if($('#fav').css("color")==$('#dummy').css("color"))
+        {
+          $('#fav').css("color","yellow"); 
+          if(localStorage.length==0)
+            localStorage.setItem(symb, "0"+symb);
+          else
+          {
+            var no=parseInt(localStorage.getItem(localStorage.key(0)));
+            for(var i=0;i<localStorage.length;i++)
+            {
+                if(no<parseInt(localStorage.getItem(localStorage.key(i))))
+                  no=parseInt(localStorage.getItem(localStorage.key(i)));
+            }
+            no++;
+            localStorage.setItem(symb, no+symb);
+          }
+          if(schange<0)
+            $('#favtable').append("<tr id='"+symb+"'><td><a role='button' name='"+symb+"' onClick='favlink(this.name)'>"+symb+"</a></td><td>"+sname+"</td><td>$ "+sval+"</td><td><span class='rr'>"+Math.abs(schange)+" ( "+Math.abs(schangepercent)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' /></td><td>"+mcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+symb+"' onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+          else if(schange>0)
+            $('#favtable').append("<tr id='"+symb+"'><td><a role='button' name='"+symb+"' onClick='favlink(this.name)'>"+symb+"</a></td><td>"+sname+"</td><td>$ "+sval+"</td><td><span class='gg'>"+Math.abs(schange)+" ( "+Math.abs(schangepercent)+"%)</span><img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td><td>"+mcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+symb+"' onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+          else
+            $('#favtable').append("<tr id='"+symb+"'><td><a role='button' name='"+symb+"' onClick='favlink(this.name)'>"+symb+"</a></td><td>"+sname+"</td><td>$ "+sval+"</td><td><span >"+Math.abs(schange)+" ( "+Math.abs(schangepercent)+"%)</span></td><td>"+mcap+"</td><td><button TYPE='BUTTON' class='btn btn-default' name='"+symb+"' onClick='remm(this.name)'><span class='glyphicon glyphicon-trash'></span></button></td></tr>");
+        }
+        else
+        {
+          $('#fav').css("color",$('#dummy').css("color"));
+          localStorage.removeItem(symb);
+          $("#"+symb).remove();
+        }
+      });
+        
+      $("#stock").autocomplete(
+        {
+          source: function( request, response ) 
+          {
+            $.ajax(
+            {
+              url: "http://stocksearch-1280.appspot.com/index.php/?input="+request.term+"&callback=?",
+              dataType: "jsonp",
+              type:"GET",
+                success: function(data) 
+                {
+                  valarr=[];
+                  response($.map(data, function(item) 
+                  {
+                    valarr.push(item.Symbol);
+                    item.label=item.Symbol+" - "+item.Name + " ( " +item.Exchange+ " )";
+                    item.value=item.Symbol;
+                    return item;
+                  }));
+
+                }
+            });
+          }, 
+          minLength: 1,
+          select: function( event, ui ) 
+          {
+            document.forms["formsubmit"]["stock"].value=ui.item.label.split(" ")[0]; 
+            return false;
+          }
+        });
+        $("#formsubmit").submit
+        (function (e) 
+          {
+            e.preventDefault();
+            if(valarr.indexOf(($("#stock").val()).toUpperCase())==-1)
+            {
+              $("#validity").empty();
+              $("#validity").append("<p style='color:red'>Select a valid entry</p>");
+              $("#next").prop("disabled",true);
+              $("#myCarousel").carousel(0);
+            }
+            else 
+            {  
+              $.ajax
+              ({
+                url:"http://stocksearch-1280.appspot.com/index.php/?symbol="+$("#stock").val()+"&callback=?",
+                dataType: "jsonp",
+                type:"GET",
+                success: function(result1,status,xhr){
+                  var result = JSON.parse(result1);     
+                  if(result.Message || result.Status!="SUCCESS")
+                    {
+                      $("#validity").empty();
+                      $("#validity").append("<p style='color:red'>No Stock Details present</p>");
+                      $("#next").prop("disabled",true);
+                      $("#myCarousel").carousel(0);
+                    }
+                    else
+                    {
+                      if(localStorage.getItem(result.Symbol)==null)
+                        $('#fav').css("color",$('#dummy').css("color"));
+                      else
+                        $('#fav').css("color","yellow");
+                      
+                      graphh="http://chart.finance.yahoo.com/t?s="+result.Symbol+"&lang=en-US&width=180&height=200";
+                      sname=result.Name;
+                      symb=result.Symbol;
+                      sval=result.LastPrice;
+                      schange=(result.Change).toFixed(2);
+                      schangepercent=(result.ChangePercent).toFixed(2);
+                      if(result.MarketCap<1000000)
+                        mcap=result.MarketCap;
+                      else if(result.MarketCap<1000000000)
+                        mcap=(result.MarketCap/1000000).toFixed(2)+" Million";
+                      else
+                        mcap=(result.MarketCap/1000000000).toFixed(2)+" Billion";
+                      $("#validity").empty();
+                      $("#resultdata").empty();
+                      $("#chart").empty();
+                      $("#next").prop("disabled",false);
+                      $("#myCarousel").carousel(1);
+                      $("#resultdata").append("<tr><td class='boldd'>Name</td><td>"+result.Name+"</td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>Symbol</td><td>"+result.Symbol+"</td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>Last Price</td><td>$ "+result.LastPrice+"</td></tr>");
+                      $("#resultdata").append();
+                      if(result.Change<0)
+                        $("#resultdata").append("<tr><td class='boldd'>Change (Change Percent)</td><td>"+Math.abs((result.Change).toFixed(2))+" ( "+Math.abs((result.ChangePercent).toFixed(2))+"<img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' />% )</td></tr>");
+                      else if(result.Change>0)
+                        $("#resultdata").append("<tr><td class='boldd'>Change (Change Percent)</td><td>"+Math.abs((result.Change).toFixed(2))+" ( "+Math.abs((result.ChangePercent).toFixed(2))+"% )<img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td></tr>");
+                      $("#resultdata").append();
+                      $("#resultdata").append("<tr><td class='boldd'>Time and Date</td><td>"+moment(result.Timestamp).format('DD MMMM YYYY, h:mm:ss a')+"</td></tr>");
+                      if(result.MarketCap<1000000)
+                        $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+result.MarketCap+"</td></tr>");
+                      else if(result.MarketCap<1000000000)
+                        $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+(result.MarketCap/1000000).toFixed(2)+" Million</td></tr>");
+                      else
+                        $("#resultdata").append("<tr><td class='boldd'>Market Cap</td><td>"+(result.MarketCap/1000000000).toFixed(2)+" Billion</td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>Volume</td><td>"+result.Volume+"</td></tr>");
+                      if(result.Change<0)
+                        $("#resultdata").append("<tr><td class='boldd'>Change YTD (Change Percent YTD)</td><td>"+Math.abs((result.ChangeYTD).toFixed(2))+" ( "+Math.abs((result.ChangePercentYTD).toFixed(2))+"<img src='http://cs-server.usc.edu:45678/hw/hw8/images/down.png' width='15px' height='14px' />% )</td></tr>");
+                      else if(result.Change>0)
+                        $("#resultdata").append("<tr><td class='boldd'>Change YTD (Change Percent YTD)</td><td>"+Math.abs((result.ChangeYTD).toFixed(2))+" ( "+Math.abs((result.ChangePercentYTD).toFixed(2))+"% )<img src='http://cs-server.usc.edu:45678/hw/hw8/images/up.png' width='15px' height='14px' /></td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>High Price</td><td>$ "+(result.High).toFixed(2)+"</td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>Low Price</td><td>$ "+(result.Low).toFixed(2)+"</td></tr>");
+                      $("#resultdata").append("<tr><td class='boldd'>Opening Price</td><td>$ "+(result.Open).toFixed(2)+"</td></tr>");
+                      $("#chart").append("<img src='http://chart.finance.yahoo.com/t?s="+result.Symbol+"&lang=en-US&width=520&height=400' class='img-responsive'/>")
+                    }
+                },
+              });
+              $.ajax
+              ({
+                url:"http://stocksearch-1280.appspot.com/index.php/?symbols="+$("#stock").val()+"&callback=?",
+                dataType: "jsonp",
+                type:"GET",
+                success: function(response,status,xhr)
+                {
+                  var cha = JSON.parse(response);      
+                  var datee = cha['Dates'];                        
+                  var o =  cha.Elements[0].DataSeries.open.values;
+                  var h =  cha.Elements[0].DataSeries.high.values;
+                  var l =  cha.Elements[0].DataSeries.low.values;
+                  var c =  cha.Elements[0].DataSeries.close.values;
+                  var data1=new Array();
+                  for(i=0;i<datee.length;i++)
+                  {
+                    var ndatee = new Date(datee[i]);                          
+                    var ttime = ndatee.getTime();
+                    var temp = new Array();
+                    temp[0] = ttime;
+                    temp[1] = o[i];
+                    temp[2] = h[i];
+                    temp[3] = l[i];
+                    temp[4] = c[i];
+                    data1[i]=temp;                       
+                  }
+
+                  $('#cchart').highcharts('StockChart', {
+
+                      title: {
+                          text: $("#stock").val().toUpperCase()+" Stock Value"
+                      },
+                      rangeSelector: {
+
+                          buttons: [ {
+                              type: 'week',
+                              count: 1,
+                              text: '1w'
+                          }, {
+                              type: 'month',
+                              count: 1,
+                              text: '1m'
+                          },{
+                              type: 'month',
+                              count: 3,
+                              text: '3m'
+                          }, {
+                              type: 'month',
+                              count: 6,
+                              text: '6m'
+                          }, {
+                              type: 'ytd',
+                              count: 1,
+                              text: 'YTD'
+                          },{
+                              type: 'year',
+                              count: 1,
+                              text: '1y'
+                          }, {
+                              type: 'all',
+                              text: 'All'
+                          }],
+                          selected: 0,
+                          inputEnabled : false
+                      },
+                       yAxis: {
+                          title: {
+                              text: 'Stock Value'
+                          }
+                      },
+                      exporting: {
+                      enabled: false
+                      },
+                      xAxis: {
+                          dateTimeLabelFormats: 
+                          {
+                          hour: '%e. %b<br><span style="font-size: 8px">%H:%M</span>'
+                          }
+                      },
+
+                      series : [{
+                          name : $("#stock").val().toUpperCase(),
+                          type: 'area',
+                          data : data1,
+                          gapSize: 5,
+                          tooltip: {
+                              valueDecimals: 2
+                          },
+                          fillColor : {
+                              linearGradient : {
+                                  x1: 0,
+                                  y1: 0,
+                                  x2: 0,
+                                  y2: 1
+                              },
+                              stops : [
+                                  [0, Highcharts.getOptions().colors[0]],
+                                  [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                              ]
+                          },
+                          threshold: null
+                      }]
+                  });
+
+                }
+              });
+              // $.ajax
+              // ({
+              //   url:"http://stocksearch-1280.appspot.com/index.php/?symbolss="+$("#stock").val()+"&callback=?",
+              //   dataType: "jsonp",
+              //   type:"GET",
+              //   success: function(result1,status,xhr){
+              //     var resultt = JSON.parse(result1);     
+              //     var res = resultt.responseData['results']; 
+              //     $("#newss").empty();
+              //     for(i=0;i<res.length;i++)
+              //     {
+              //       $("#newss").append("<div class='well'><div class='row'><div class='col-md-12'><a href='"+res[i].unescapedUrl+"' target='_blank'>"+res[i].titleNoFormatting+"</a></div></div><div class='row'><div class='col-md-12'>"+res[i].content+"</div></div><div class='row'><div class='col-md-12'></div></div></br><div class='row'><div class='col-md-12'><span class='boldd'>Publisher: </span>"+res[i].publisher+"</div></div><div class='row'><div class='col-md-12'><span class='boldd'>Date: </span>"+res[i].publishedDate+"</div></div></div>");
+              //     }  
+              //   },
+              // });
+
+              $.ajax
+              ({
+                url:"http://stocksearch-1280.appspot.com/index.php/?symbolsss="+$("#stock").val()+"&callback=?",
+                dataType: "jsonp",
+                type:"GET",
+                success: function(result1,status,xhr){
+                  var resultt = JSON.parse(result1);     
+                  var res = resultt.d['results']; 
+                  $("#newss").empty();
+                  for(i=0;i<res.length;i++)
+                  {
+                    $("#newss").append("<div class='well'><div class='row'><div class='col-md-12'><a href='"+res[i].Url+"' target='_blank'>"+res[i].Title+"</a></div></div><div class='row'><div class='col-md-12'>"+res[i].Description+"</div></div><div class='row'><div class='col-md-12'></div></div></br><div class='row'><div class='col-md-12'><span class='boldd'>Publisher: </span>"+res[i].Source+"</div></div><div class='row'><div class='col-md-12'><span class='boldd'>Date: </span>"+res[i].Date+"</div></div></div>");
+                  }  
+                },
+              });
+            }
+            return false;
+          }
+        );
+
+     });
+    </script>
+
+  <NOSCRIPT>
+  </body>
+</html>
